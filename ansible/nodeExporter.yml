@@ -1,0 +1,63 @@
+- name: Provision a server
+  hosts: all
+  tasks:
+    - name: Install service on Debian
+      block:
+        - name: Install tar
+          apt:
+            name: "{{item}}"
+            state: present
+          loop:
+            - tar
+      when: ansible_os_family == "Debian"      
+      
+    - name: Install service on RedHat
+      block:
+        - name: Install tar
+          yum:
+            name: "{{item}}"
+            state: present
+          loop:
+            - tar
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Node exporter
+
+      block:
+        - name: Copy Node exporter bin
+          copy:
+            src: ../userdata/nonode_exporter-1.3.1.linux-amd64.tar.gz 
+            dest: /tmp/nonode_exporter-1.3.1.linux-amd64.tar.gz
+        
+        - name: Dir for user data
+          file:
+            path: /tmp/node
+            state: directory
+            
+        - name: Extract bin
+          unarchive: 
+            src: /tmp/nonode_exporter-1.3.1.linux-amd64.tar.gz
+            dest: /tmp/node/
+
+        - name: Copy Node exporter bin
+          copy:
+            src: /tmp/node/node_exporter-1.3.1.linux-amd64/node_exporter
+            dest: /usr/sbin/node_exporter
+
+        - name: Change mod on bin
+          file:
+            dest: /usr/sbin/node_exporter
+            mode: 755
+    
+    - name: Copy & Enable Services
+      block:
+        - name: Copy node_exporter.service
+          copy:
+            src: ../userdata/node_exporter.service 
+            dest: /etc/systemd/system/node_exporter.service
+
+        - name: node_exporter Start&Enable
+          service:
+            name: node_exporter.service
+            state: started
+            enabled: yes

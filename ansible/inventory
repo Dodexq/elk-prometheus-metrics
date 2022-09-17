@@ -1,0 +1,15 @@
+[websrvgrp]
+ansible-for-vm ansible_host=192.168.56.10
+backend ansible_host=192.168.56.13
+
+[metrics]
+grafana-metrics ansible_host=192.168.56.11
+elk-agent-metrics ansible_host=192.168.56.12 
+
+[datacenter:children]
+websrvgrp
+metrics
+
+[datacenter:vars]
+ansible_user=vagrant 
+ansible_password=vagrant

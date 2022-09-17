@@ -1,0 +1,75 @@
+- name: Provision a server
+  hosts: ansible-for-vm
+  become: yes
+  tasks:
+    - name: Install service on Debian
+      block:
+        - name: Install tar
+          apt:
+            name: "{{item}}"
+            state: present
+          loop:
+            - tar
+      when: ansible_os_family == "Debian"      
+      
+    - name: Install service on RedHat
+      block:
+        - name: Install tar
+          yum:
+            name: "{{item}}"
+            state: present
+          loop:
+            - tar
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Prometheus 2.37
+      block:
+        - name: wget Prometheus 2.37
+          get_url:
+            url: https://github.com/prometheus/prometheus/releases/download/v2.37.0/prometheus-2.37.0.linux-amd64.tar.gz
+            dest: /tmp/prometheus-2.37.0.linux-amd64.tar.gz
+
+        - name: Dir for user data
+          file:
+            path: /tmp/prometheus
+            state: directory
+
+        - name: Extract Prometheus 
+          unarchive: 
+            src: /tmp/prometheus-2.37.0.linux-amd64.tar.gz
+            dest: /tmp/prometheus/
+
+        - name: Copy Prometheus /usr/bin
+          copy:
+            src: /tmp/prometheus/prometheus-2.37.0.linux-amd64/{{item}}
+            dest: /usr/bin/
+            mode: 755
+          loop:
+            - prometheus
+            - promtool
+
+        - name: Copy console* directory
+          copy:
+            src: /tmp/prometheus/prometheus-2.37.0.linux-amd64/{{item}}
+            dest: /etc/prometheus
+          loop:
+            - console_libraries
+            - consoles
+
+        - name: Copy Prometheus Config from /vagrant/userdata
+          copy:
+            src: /vagrant/userdata/prometheus-config/prometheus.yml
+            dest: /etc/prometheus/prometheus.yml
+    
+    - name: Copy & Enable Services
+      block:
+        - name: Copy prometheus.service
+          copy:
+            src: /vagrant/userdata/prometheus-config/prometheus.service
+            dest: /etc/systemd/system/prometheus.service
+
+        - name: prometheus.service Start&Enable
+          service:
+            name: prometheus.service
+            state: started
+            enabled: yes
