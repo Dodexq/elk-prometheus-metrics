@@ -2,10 +2,10 @@
 2) Развертывание Prometheus + Grafana, раскатка node-exporter по всем хостам с помощью Ansible 
 
 ### VM:
-1) ansible-for-vm
-2) grafana-metrics
-3) elk-agent-metrics
-4) some-backend
+1) ansible-for-vm - `192.168.56.10` - ansible, prometheus(:9090)
+2) grafana-metrics `192.168.56.11` - grafana(:3000) 
+3) elk-agent-metrics `192.168.56.12` - elasticsearch(:9200), kibana(:5601)
+4) some-backend `192.168.56.13` - some backend apps
 
 ## Prometheus + Grafana + Node-exporter 
 * Развертывание Grafana на VM `grafana-metrics` с помощью Vagrant-provision
