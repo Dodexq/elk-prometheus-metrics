@@ -7,4 +7,3 @@ sudo apt-get update
 sudo apt-get install -y grafana-enterprise
 sudo systemctl enable grafana-server
 sudo systemctl start grafana-server
-

@@ -1,1 +1,47 @@
-#Configure all ELK stack
+- name: Configure ELK-Stack
+  hosts: elk-agent-metrics
+  tasks:
+    - name: Copy all configure files in ELK
+      block:
+        - name: Copy elasticsearch.yml
+          copy:
+            src: /vagrant/userdata/elk-stack/elasticsearch.yml
+            dest: /etc/elasticsearch/
+            owner: root
+            group: root
+            mode: '0644'
+        - name: Copy kibana.yml
+          copy:
+            src: /vagrant/userdata/elk-stack/kibana.yml
+            dest: /etc/kibana/
+            owner: root
+            group: root
+            mode: '0644'
+        - name: Copy logstash module
+          copy:
+            src: /vagrant/userdata/elk-stack/logstash/conf.d/{{item}}
+            dest: /etc/logstash/conf.d/
+            owner: root
+            group: root
+            mode: '0644'
+          loop:
+            - 02-beats-input.conf
+            - 30-elasticsearch-output.conf
+
+    - name: Start&Enable ELK
+      block:
+        - name: Start&Enable Elasticsearch
+          service:
+            name: elasticsearch.service
+            state: started
+            enabled: yes
+        - name: Start&Enable Kibana
+          service:
+            name: kibana.service
+            state: started
+            enabled: yes
+        - name: Start&Enable Logstash
+          service:
+            name: logstash.service
+            state: started
+            enabled: yes

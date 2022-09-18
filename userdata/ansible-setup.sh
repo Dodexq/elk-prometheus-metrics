@@ -8,4 +8,3 @@ sudo apt install ansible -y
 
 # Docker + Docker Compose
 wget -O - https://get.docker.com | bash
-
