@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
 	grafana.vm.hostname = "grafana-metrics"
     grafana.vm.network "private_network", ip: "192.168.56.11"
 	grafana.vm.provider "virtualbox" do |vb|
-		vb.memory = "2048"
+		vb.memory = "1024"
 		vb.cpus = "2"
     	vb.name = "grafana-metrics"
 	grafana.vm.provision "shell", path: "userdata/grafana-metrics.sh"
@@ -32,9 +32,10 @@ Vagrant.configure("2") do |config|
     elkagent.vm.hostname = "elk-agent-metrics"
 	elkagent.vm.network "private_network", ip: "192.168.56.12"
 	elkagent.vm.provider "virtualbox" do |vb|
-		vb.memory = "4096"
+		vb.memory = "5120"
 		vb.name = "elk-agent-metrics"
 		vb.cpus = "4"
+	elkagent.vm.provision "shell", path: "userdata/elk-agent-metrics.sh"
 	end
   end
 

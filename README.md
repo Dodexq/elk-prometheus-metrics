@@ -8,6 +8,7 @@
 * Развертывание Grafana на VM `grafana-metrics` с помощью Vagrant-provision
 * Развертывание Prometheus 2.37 (версия без бага сбора логов с node-exporter) `./andible/ ansible-playbook install_prometheus_2.37.yml ` (ansible на VM ansible-for-vm)
 * Раскатка `node-exporter` по всем VM хостам `./ansible/ ansible-playbook nodeExporter.yml`
+* После установки использовал Dashboard `Node Exporter Full` ID: 1860
 
 ## Elastic Stack: Elasticsearch, Kibana, Logstash, раскатка Beats
 
