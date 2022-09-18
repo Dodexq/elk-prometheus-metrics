@@ -1,8 +1,11 @@
 1) Развертывание Elastic Stack: Elasticsearch, Kibana, Logstash, раскатка Beats по всем хостам с помощью Ansible
-2) Развертывание Prometheus + раскатка node-exporter по всем хостам с помощью Ansible 
+2) Развертывание Prometheus + Grafana, раскатка node-exporter по всем хостам с помощью Ansible 
 
-`./userdata` | 
-`./ansible`
+### VM:
+1) ansible-for-vm
+2) grafana-metrics
+3) elk-agent-metrics
+4) some-backend
 
 ## Prometheus + Grafana + Node-exporter 
 * Развертывание Grafana на VM `grafana-metrics` с помощью Vagrant-provision
@@ -12,4 +15,6 @@
 
 ## Elastic Stack: Elasticsearch, Kibana, Logstash, раскатка Beats
 
+* Установка Elasticsearch, Kibana, Logstash с помощью Vagrant-provision
+* Конфигурирование ELK `./ansible/config_elk.yml`
 * soon
