@@ -17,4 +17,4 @@
 
 * Установка Elasticsearch, Kibana, Logstash с помощью Vagrant-provision
 * Конфигурирование ELK `./ansible/config_elk.yml`
-* Раскатка `Filebeat` по VM Ubuntu and Centos
+* Раскатка Filebeat `./ansible/install_filebeat.yml` по VM Ubuntu and Centos

@@ -45,17 +45,17 @@
     - name: Shell configure pipeline
       block:
 
-        - name: --pipelines
-          shell:
-            cmd: "sudo filebeat setup --pipelines --modules system"
+        - name: Copy pipeline installer
+          copy:
+            src: /vagrant/userdata/elk-stack/filebeat/setup_pipeline.sh
+            dest: /home/vagrant/
+            owner: root
+            group: root
+            mode: '0644'
 
-        - name: --pipelines
-          shell:
-            cmd: f"sudo filebeat setup --index-management -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["192.168.56.12:9200"]'"
-
-        - name: --pipelines
-          shell:
-            cmd: "sudo filebeat setup -E output.logstash.enabled=false -E output.elasticsearch.hosts=['192.168.56.12:9200'] -E setup.kibana.host=192.168.56.12:5601"
+        - name: Execute setup_pipeline shell script > 1 min
+          script:
+            cmd: /home/vagrant/setup_pipeline.sh
 
       when: ansible_os_family == "Debian"      
 
@@ -73,7 +73,7 @@
 
 
 
-
+# soon
     # - name: Install service on RedHat
     #   block:
     #     - name: Install tar
@@ -83,5 +83,3 @@
     #       loop:
     #         - tar
     #   when: ansible_os_family == "RedHat"
-
-    # 
