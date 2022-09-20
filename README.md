@@ -1,8 +1,13 @@
-1) Развертывание Elastic Stack: Elasticsearch, Kibana, Logstash, раскатка Beats по всем хостам с помощью Ansible
+## Задача: Автоматизировать развертывание логирования и мониторинга ресурсов с помощью Ansible.
+
+1. Развертывание Elastic Stack: Elasticsearch, Kibana, Logstash, раскатка Beats по всем хостам с помощью Ansible
 <p align="center"> 
 <a href="https://raw.githubusercontent.com/Dodexq/elk-prometheus-metrics/main/screenshots/Kibana.png" rel="some text"><img src="https://raw.githubusercontent.com/Dodexq/elk-prometheus-metrics/main/screenshots/Kibana.png" alt="" width="500" /></a>
 </p>
-2) Развертывание Prometheus + Grafana, раскатка node-exporter по всем хостам с помощью Ansible 
+
+2. Развертывание Prometheus + Grafana, раскатка node-exporter по всем 
+хостам с помощью Ansible
+
 <p align="center"> 
 <a href="https://raw.githubusercontent.com/Dodexq/elk-prometheus-metrics/main/screenshots/Grafana.png" rel="some text"><img src="https://raw.githubusercontent.com/Dodexq/elk-prometheus-metrics/main/screenshots/Grafana.png" alt="" width="500" /></a>
 </p>
