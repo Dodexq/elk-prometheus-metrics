@@ -1,16 +1,17 @@
 - name: Install and config filebeat on VM
-  hosts: elk-agent-metrics
+  hosts: datacenter
   vars:
     filebeat_ubuntu: filebeat-7.15.1-amd64.deb
+    filebeat_centos: filebeat-7.15.1-x86_64.rpm
 
   tasks:
     - name: Install & config Filebeat on Ubuntu
       block:
         
-        - name: Copy Filebeat
-          copy:
-            src: /vagrant/userdata/elk-stack/filebeat/ubuntu/{{ filebeat_ubuntu }}
-            dest: /home/vagrant/
+        - name: Download Filebeat
+          get_url:
+            url: https://artifacts.elastic.co/packages/7.x/apt/pool/main/f/filebeat/{{ filebeat_ubuntu }}
+            dest: /home/vagrant/{{ filebeat_ubuntu }}
             owner: root
             group: root
             mode: '0644'
@@ -70,16 +71,70 @@
       when: ansible_os_family == "Debian"      
 
 
+###### Centos #####   
 
 
+    - name: Install & config Filebeat on Centos
+      block:
+        
+        - name: Download Filebeat
+          get_url:
+            url: https://artifacts.elastic.co/downloads/beats/filebeat/{{ filebeat_centos }}
+            dest: /home/vagrant/{{ filebeat_centos }}
+            owner: root
+            group: root
+            mode: '0644'
+        
+        - name: Install Filebeat
+          yum:
+            name: /home/vagrant/{{ filebeat_centos }}
+            state: present 
+        
+        - name: Enable system module
+          shell:
+            cmd: "sudo filebeat modules enable system"
 
-# soon
-    # - name: Install service on RedHat
-    #   block:
-    #     - name: Install tar
-    #       yum:
-    #         name: "{{item}}"
-    #         state: present
-    #       loop:
-    #         - tar
-    #   when: ansible_os_family == "RedHat"
+        - name: Copy filebeat.yml
+          copy:
+            src: /vagrant/userdata/elk-stack/filebeat/ubuntu/filebeat.yml
+            dest: /etc/filebeat/
+            owner: root
+            group: root
+            mode: '0644'
+
+        - name: Copy system config module
+          copy:
+            src: /vagrant/userdata/elk-stack/filebeat/ubuntu/system.yml
+            dest: /etc/filebeat/modules.d/
+            owner: root
+            group: root
+            mode: '0644'
+      
+      when: ansible_os_family == "RedHat"      
+
+    - name: Shell configure pipeline
+      block:
+
+        - name: Copy pipeline installer
+          copy:
+            src: /vagrant/userdata/elk-stack/filebeat/setup_pipeline.sh
+            dest: /home/vagrant/
+            owner: root
+            group: root
+            mode: '0644'
+
+        - name: Execute setup_pipeline shell script > 1 min
+          script:
+            cmd: /home/vagrant/setup_pipeline.sh
+
+      when: ansible_os_family == "RedHat"      
+
+    - name: Start&Enable Filebeat
+      block:
+        - name: Start&Enable Filebeat
+          service:
+            name: filebeat.service
+            state: started
+            enabled: yes
+      
+      when: ansible_os_family == "RedHat"
